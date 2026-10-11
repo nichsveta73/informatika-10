@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Інфографіка. Практична робота №1</title>
+  <style>
+    :root {
+      --ink: #12343b;
+      --muted: #50646a;
+      --line: #d7e4e7;
+      --paper: #f7fbfb;
+      --white: #ffffff;
+      --teal: #0b8f8a;
+      --teal-dark: #066965;
+      --mint: #dff6ef;
+      --sky: #dff0ff;
+      --coral: #ff7b67;
+      --yellow: #ffe08a;
+      --green: #26a269;
+      --red: #c94137;
+      --shadow: 0 10px 30px rgba(18, 52, 59, 0.12);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px clamp(14px, 3vw, 34px);
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0;
+      color: var(--teal-dark);
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .nav a, .home-link {
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      text-decoration: none;
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .nav a:hover, .home-link:hover {
+      border-color: var(--teal);
+      color: var(--teal-dark);
+    }
+
+    header {
+      min-height: 72vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+      gap: 32px;
+      align-items: center;
+      padding: clamp(28px, 5vw, 62px);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(11, 143, 138, 0.16), transparent 28%),
+        linear-gradient(135deg, #f9ffff 0%, #e9f7fb 54%, #f7fbfb 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-copy h1 {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero-copy p {
+      margin: 0 0 18px;
+      max-width: 760px;
+      font-size: clamp(17px, 2.1vw, 22px);
+      color: var(--muted);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 22px 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 650;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: var(--radius);
+      padding: 11px 16px;
+      background: var(--teal);
+      color: var(--white);
+      cursor: pointer;
+      font-weight: 750;
+      box-shadow: 0 8px 20px rgba(11, 143, 138, 0.18);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover { background: var(--teal-dark); }
+
+    .btn.secondary {
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover {
+      border-color: var(--teal);
+      color: var(--teal-dark);
+    }
+
+    .hero-visual {
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+    }
+
+    .infographic-board {
+      width: min(100%, 520px);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .board-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .board-title {
+      font-weight: 850;
+      font-size: 20px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .dot:nth-child(2) { background: var(--yellow); }
+    .dot:nth-child(3) { background: var(--teal); }
+
+    .mini-chart {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      align-items: end;
+      height: 160px;
+      padding: 14px;
+      background: #f4fbfb;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .bar {
+      border-radius: 8px 8px 2px 2px;
+      background: var(--teal);
+      min-height: 28px;
+      position: relative;
+    }
+
+    .bar:nth-child(2) { height: 55%; background: #3caa71; }
+    .bar:nth-child(3) { height: 76%; background: #f2b84b; }
+    .bar:nth-child(4) { height: 46%; background: var(--coral); }
+    .bar:nth-child(1) { height: 36%; }
+
+    .board-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .board-item {
+      min-height: 92px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .board-item strong {
+      display: block;
+      font-size: 28px;
+      color: var(--teal-dark);
+    }
+
+    main {
+      padding: 0 clamp(14px, 3vw, 34px) 56px;
+    }
+
+    section {
+      max-width: 1160px;
+      margin: 28px auto;
+      padding: clamp(18px, 3vw, 28px);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 14px rgba(18, 52, 59, 0.04);
+    }
+
+    section > h2 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .task-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #fbfefe;
+      min-height: 100%;
+    }
+
+    .task-card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .task-card p, .task-card ul {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      margin-top: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #eef7f7;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .status.ok { background: #e4f8ec; color: #176b3a; }
+    .status.bad { background: #ffe8e3; color: #8d2019; }
+
+    .check-row, .option-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      cursor: pointer;
+    }
+
+    .check-row input, .option-row input {
+      margin-top: 4px;
+      transform: scale(1.15);
+      accent-color: var(--teal);
+    }
+
+    .match-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .match-row {
+      display: grid;
+      grid-template-columns: minmax(140px, 0.8fr) minmax(220px, 1.2fr);
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfefe;
+    }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 11px;
+      background: var(--white);
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    .mini-preview {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: #fbfefe;
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .icon-figure {
+      width: 86px;
+      height: 86px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--mint);
+    }
+
+    .icon-figure svg {
+      width: 68px;
+      height: 68px;
+    }
+
+    .sort-zone {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .bucket {
+      border: 2px dashed #b4cbd0;
+      border-radius: var(--radius);
+      padding: 12px;
+      min-height: 160px;
+      background: #fbfefe;
+    }
+
+    .bucket h3 { margin-top: 0; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 46px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: var(--white);
+      cursor: grab;
+      user-select: none;
+      font-weight: 650;
+    }
+
+    .chip:active { cursor: grabbing; }
+
+    .chip.selected {
+      outline: 3px solid rgba(11, 143, 138, 0.24);
+      border-color: var(--teal);
+    }
+
+    .constructor {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(300px, 1.1fr);
+      gap: 16px;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    label strong { display: block; margin-bottom: 6px; }
+
+    .brief {
+      min-height: 380px;
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #f9fcfc;
+    }
+
+    .quiz {
+      display: grid;
+      gap: 12px;
+    }
+
+    .question {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #fbfefe;
+    }
+
+    .question p {
+      margin: 0 0 8px;
+      font-weight: 750;
+    }
+
+    .reflection-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .result-panel {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: #effafa;
+      border: 1px solid #c8e5e5;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+
+    .data-table th, .data-table td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .data-table th {
+      background: #eaf7f7;
+    }
+
+    .type-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .type-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fbfefe;
+    }
+
+    .type-card svg {
+      width: 100%;
+      height: 150px;
+      display: block;
+      border-radius: var(--radius);
+      background: #f4fbfb;
+      border: 1px solid var(--line);
+      margin-bottom: 10px;
+    }
+
+    .rule-list {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      counter-reset: rules;
+    }
+
+    .rule-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fffdf5;
+      position: relative;
+    }
+
+    .rule-item::before {
+      counter-increment: rules;
+      content: counter(rules);
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      margin-bottom: 8px;
+      border-radius: 50%;
+      background: var(--yellow);
+      font-weight: 800;
+    }
+
+    .progress-wrap {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e2ecee;
+      margin: 8px 0 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--coral), var(--yellow), var(--teal));
+      transition: width 0.25s ease;
+    }
+
+    .hidden { display: none !important; }
+
+    .print-note {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 880px) {
+      header, .constructor, .grid, .grid.two, .reflection-grid, .type-gallery, .rule-list {
+        grid-template-columns: 1fr;
+      }
+
+      header { min-height: auto; }
+
+      .hero-visual { min-height: auto; }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .match-row, .mini-preview, .sort-zone {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      .topbar, .hero-actions, .btn, .nav { display: none !important; }
+      header, section {
+        box-shadow: none;
+        border: 1px solid #bbb;
+        margin: 0 0 12px;
+        page-break-inside: avoid;
+      }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="home-link" href="index.html">Головна сторінка</a>
+    <div class="brand">Інформатика 10 клас</div>
+    <nav class="nav" aria-label="Навігація уроку">
+      <a href="#start">Старт</a>
+      <a href="#challenge">Виклик</a>
+      <a href="#actual">Детектив</a>
+      <a href="#learn">Нове</a>
+      <a href="#prepare">Підготовка</a>
+      <a href="#practice">Практична</a>
+      <a href="#gallery">Галерея</a>
+      <a href="#reflection">Рефлексія</a>
+      <a href="#homework">Домашнє</a>
+    </nav>
+  </div>
+
+  <header id="start">
+    <div class="hero-copy">
+      <h1>Інфографіка. Практична робота №1</h1>
+      <p>Створюємо зрозумілу інфографіку в Canva: від аналізу даних і вимог клієнта до готового макета з перевіркою якості.</p>
+      <div class="meta">
+        <span class="pill">10 клас</span>
+        <span class="pill">45 хв</span>
+        <span class="pill">Canva</span>
+        <span class="pill">НУШ: дослідження + рефлексія</span>
+      </div>
+      <div class="hero-actions">
+        <a class="btn" href="#challenge">Почати урок</a>
+        <button class="btn secondary" type="button" onclick="window.print()">Друкувати сторінку</button>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-label="Візуальний приклад інфографіки">
+      <div class="infographic-board">
+        <div class="board-top">
+          <div class="board-title">Чернетка інфографіки</div>
+          <div class="dots" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+        <div class="mini-chart" aria-hidden="true">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+        <div class="board-grid">
+          <div class="board-item"><strong>4</strong> типи інфографіки</div>
+          <div class="board-item"><strong>1</strong> головна ідея на макет</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Очікувані результати</h2>
+      <p class="lead">Після уроку учень/учениця зможе пояснити призначення інфографіки, добирати тип візуалізації до даних, створити макет у Canva та оцінити його за критеріями.</p>
+      <div class="grid">
+        <article class="task-card">
+          <h3>Знання</h3>
+          <p>Розрізняє факти, дані, іконки, діаграми, підписи, заголовки та джерела.</p>
+        </article>
+        <article class="task-card">
+          <h3>Уміння</h3>
+          <p>Створює інфографіку для конкретної аудиторії, добирає кольори, шрифти й композицію.</p>
+        </article>
+        <article class="task-card">
+          <h3>Ставлення</h3>
+          <p>Критично перевіряє дані, не перевантажує макет і поважає авторські права.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="challenge">
+      <h2>І. Організація та мотивація. “Інформаційний виклик” — 3 хв</h2>
+      <p class="lead">Порівняйте два способи подання однієї інформації та визначте, чому візуалізація допомагає швидше зрозуміти зміст.</p>
+      <div class="grid two">
+        <article class="task-card">
+          <h3>Варіант А: текст</h3>
+          <p>За результатами навчального опитування учні витрачають цифровий час так: 35% - соціальні мережі, 25% - навчання, 20% - відео, 15% - ігри, 5% - інше.</p>
+        </article>
+        <article class="task-card">
+          <h3>Варіант Б: візуалізація</h3>
+          <div class="mini-preview">
+            <div class="icon-figure" aria-hidden="true">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="36" fill="#dff6ef"/>
+                <path d="M50 50 L50 14 A36 36 0 0 1 78 73 Z" fill="#0b8f8a"/>
+                <path d="M50 50 L78 73 A36 36 0 0 1 20 70 Z" fill="#f2b84b"/>
+                <path d="M50 50 L20 70 A36 36 0 0 1 20 31 Z" fill="#ff7b67"/>
+                <path d="M50 50 L20 31 A36 36 0 0 1 43 15 Z" fill="#3caa71"/>
+                <path d="M50 50 L43 15 A36 36 0 0 1 50 14 Z" fill="#8a63d2"/>
+                <circle cx="50" cy="50" r="13" fill="#ffffff"/>
+              </svg>
+            </div>
+            <p><strong>Ті самі дані:</strong> соціальні мережі - 35%, навчання - 25%, відео - 20%, ігри - 15%, інше - 5%.</p>
+          </div>
+        </article>
+      </div>
+      <div class="grid two">
+        <label><strong>1. У якому форматі швидше видно найбільшу категорію?</strong><textarea id="challengeQ1" placeholder="Запишіть коротку відповідь..."></textarea></label>
+        <label><strong>2. Який варіант легше запам'ятати? Чому?</strong><textarea id="challengeQ2" placeholder="Порівняйте текст і діаграму..."></textarea></label>
+        <label><strong>3. Чи може діаграма спотворити інформацію?</strong><textarea id="challengeQ3" placeholder="Наведіть приклад або пояснення..."></textarea></label>
+        <label><strong>4. Де ви зустрічали інфографіку в житті?</strong><textarea id="challengeQ4" placeholder="Наприклад: новини, підручник, реклама..."></textarea></label>
+      </div>
+      <div class="result-panel">
+        <strong>Проблемне запитання:</strong> Як перетворити складні дані на зрозуміле візуальне повідомлення, яке можна сприйняти за кілька секунд?
+      </div>
+      <button class="btn" type="button" onclick="checkChallengeAnswers()">Перевірити відповіді</button>
+      <span id="challengeStatus" class="status">Виклик очікує відповіді</span>
+    </section>
+
+    <section id="actual">
+      <h2>ІІ. Актуалізація знань. “Дизайнер-детектив” — 5 хв</h2>
+      <p class="lead">Пригадайте ключові поняття дизайну й даних. Поставте у відповідність поняття та його призначення.</p>
+      <div class="match-list" id="matchTerms">
+        <div class="match-row">
+          <strong>Інфографіка</strong>
+          <select data-answer="visual">
+            <option value="">Оберіть відповідь</option>
+            <option value="source">Вказує, звідки взято дані</option>
+            <option value="visual">Пояснює інформацію за допомогою тексту, зображень і даних</option>
+            <option value="accent">Виділяє головне в макеті</option>
+            <option value="diagram">Показує числове співвідношення</option>
+          </select>
+        </div>
+        <div class="match-row">
+          <strong>Діаграма</strong>
+          <select data-answer="diagram">
+            <option value="">Оберіть відповідь</option>
+            <option value="accent">Виділяє головне в макеті</option>
+            <option value="visual">Пояснює інформацію за допомогою тексту, зображень і даних</option>
+            <option value="diagram">Показує числове співвідношення</option>
+            <option value="source">Вказує, звідки взято дані</option>
+          </select>
+        </div>
+        <div class="match-row">
+          <strong>Візуальна ієрархія</strong>
+          <select data-answer="accent">
+            <option value="">Оберіть відповідь</option>
+            <option value="diagram">Показує числове співвідношення</option>
+            <option value="source">Вказує, звідки взято дані</option>
+            <option value="accent">Виділяє головне в макеті</option>
+            <option value="visual">Пояснює інформацію за допомогою тексту, зображень і даних</option>
+          </select>
+        </div>
+        <div class="match-row">
+          <strong>Джерело даних</strong>
+          <select data-answer="source">
+            <option value="">Оберіть відповідь</option>
+            <option value="source">Вказує, звідки взято дані</option>
+            <option value="diagram">Показує числове співвідношення</option>
+            <option value="visual">Пояснює інформацію за допомогою тексту, зображень і даних</option>
+            <option value="accent">Виділяє головне в макеті</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" type="button" onclick="checkMatches()">Перевірити відповідність</button>
+      <span id="matchStatus" class="status">Очікує перевірки</span>
+    </section>
+
+    <section>
+      <h2>Детективне завдання: де інфографіка доречна?</h2>
+      <p class="lead">Оберіть ситуації, де інфографіка справді допоможе швидше зрозуміти інформацію.</p>
+      <div id="motivationChoices" class="grid two">
+        <label class="option-row"><input type="checkbox" data-good="true"> Пояснити результати опитування учнів про цифрові звички.</label>
+        <label class="option-row"><input type="checkbox" data-good="false"> Записати повний текст параграфа без скорочень.</label>
+        <label class="option-row"><input type="checkbox" data-good="true"> Показати алгоритм безпечного створення пароля.</label>
+        <label class="option-row"><input type="checkbox" data-good="true"> Порівняти витрати часу на навчання, відпочинок і сон.</label>
+        <label class="option-row"><input type="checkbox" data-good="false"> Розмістити 20 випадкових картинок без підписів.</label>
+        <label class="option-row"><input type="checkbox" data-good="true"> Стисло презентувати правила академічної доброчесності.</label>
+      </div>
+      <button class="btn" type="button" onclick="checkMotivation()">Перевірити вибір</button>
+      <span id="motivationStatus" class="status">Очікує відповіді</span>
+    </section>
+
+    <section id="learn">
+      <h2>ІІІ. Вивчення нового матеріалу — 8 хв</h2>
+      <p class="lead">Мініпояснення: що таке інфографіка, які бувають її типи та яких правил треба дотримуватися.</p>
+      <div class="task-card">
+        <h3>Що таке інфографіка?</h3>
+        <p>Інфографіка - це спосіб подання інформації, у якому текст, числа, зображення, діаграми й піктограми допомагають швидко зрозуміти головну ідею.</p>
+      </div>
+
+      <h3>Чотири типи інфографіки</h3>
+      <div class="type-gallery">
+        <article class="type-card">
+          <svg viewBox="0 0 180 130" aria-label="Статистична інфографіка">
+            <rect x="12" y="12" width="156" height="106" rx="10" fill="#ffffff"/>
+            <circle cx="55" cy="64" r="34" fill="#dff6ef"/>
+            <path d="M55 64 L55 30 A34 34 0 0 1 87 76 Z" fill="#0b8f8a"/>
+            <path d="M55 64 L87 76 A34 34 0 0 1 37 93 Z" fill="#ff7b67"/>
+            <path d="M55 64 L37 93 A34 34 0 0 1 55 30 Z" fill="#f2b84b"/>
+            <rect x="105" y="37" width="42" height="8" rx="4" fill="#0b8f8a"/>
+            <rect x="105" y="57" width="30" height="8" rx="4" fill="#ff7b67"/>
+            <rect x="105" y="77" width="22" height="8" rx="4" fill="#f2b84b"/>
+          </svg>
+          <h4>Статистична</h4>
+          <p>Показує структуру цифрового часу: частки, відсотки, кількісні показники.</p>
+        </article>
+        <article class="type-card">
+          <svg viewBox="0 0 180 130" aria-label="Процесна інфографіка">
+            <rect x="12" y="12" width="156" height="106" rx="10" fill="#ffffff"/>
+            <circle cx="39" cy="65" r="18" fill="#dff6ef" stroke="#0b8f8a" stroke-width="3"/>
+            <circle cx="90" cy="65" r="18" fill="#fff4d1" stroke="#f2b84b" stroke-width="3"/>
+            <circle cx="141" cy="65" r="18" fill="#ffe7e1" stroke="#ff7b67" stroke-width="3"/>
+            <path d="M58 65 H70" stroke="#12343b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M109 65 H121" stroke="#12343b" stroke-width="4" stroke-linecap="round"/>
+            <text x="39" y="71" text-anchor="middle" font-size="18" font-weight="700" fill="#12343b">1</text>
+            <text x="90" y="71" text-anchor="middle" font-size="18" font-weight="700" fill="#12343b">2</text>
+            <text x="141" y="71" text-anchor="middle" font-size="18" font-weight="700" fill="#12343b">3</text>
+          </svg>
+          <h4>Процесна</h4>
+          <p>Пояснює послідовність дій, наприклад як захистити акаунт.</p>
+        </article>
+        <article class="type-card">
+          <svg viewBox="0 0 180 130" aria-label="Хронологічна інфографіка">
+            <rect x="12" y="12" width="156" height="106" rx="10" fill="#ffffff"/>
+            <line x1="30" y1="68" x2="150" y2="68" stroke="#0b8f8a" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="38" cy="68" r="8" fill="#ff7b67"/>
+            <circle cx="76" cy="68" r="8" fill="#f2b84b"/>
+            <circle cx="114" cy="68" r="8" fill="#3caa71"/>
+            <circle cx="150" cy="68" r="8" fill="#8a63d2"/>
+            <text x="38" y="45" text-anchor="middle" font-size="12" fill="#12343b">I</text>
+            <text x="76" y="45" text-anchor="middle" font-size="12" fill="#12343b">II</text>
+            <text x="114" y="45" text-anchor="middle" font-size="12" fill="#12343b">III</text>
+            <text x="150" y="45" text-anchor="middle" font-size="12" fill="#12343b">IV</text>
+          </svg>
+          <h4>Хронологічна</h4>
+          <p>Показує розвиток подій у часі, наприклад етапи розвитку комп'ютерної техніки.</p>
+        </article>
+        <article class="type-card">
+          <svg viewBox="0 0 180 130" aria-label="Порівняльна інфографіка">
+            <rect x="12" y="12" width="156" height="106" rx="10" fill="#ffffff"/>
+            <rect x="34" y="35" width="44" height="58" rx="8" fill="#dff6ef" stroke="#0b8f8a" stroke-width="3"/>
+            <rect x="102" y="35" width="44" height="58" rx="8" fill="#ffe7e1" stroke="#ff7b67" stroke-width="3"/>
+            <text x="56" y="68" text-anchor="middle" font-size="22" font-weight="700" fill="#0b8f8a">+</text>
+            <text x="124" y="68" text-anchor="middle" font-size="22" font-weight="700" fill="#ff7b67">-</text>
+            <line x1="90" y1="30" x2="90" y2="100" stroke="#d7e4e7" stroke-width="3"/>
+          </svg>
+          <h4>Порівняльна</h4>
+          <p>Допомагає порівняти два явища, наприклад онлайн-навчання та очне навчання.</p>
+        </article>
+      </div>
+
+      <h3>П'ять правил якісної інфографіки</h3>
+      <div class="rule-list">
+        <div class="rule-item"><strong>Одна головна ідея.</strong><br>Уся інфографіка має відповідати на одне ключове запитання.</div>
+        <div class="rule-item"><strong>Мінімум тексту.</strong><br>Короткі підписи, факти й висновки замість довгих абзаців.</div>
+        <div class="rule-item"><strong>Гармонійні кольори.</strong><br>2-3 кольори, достатній контраст і відсутність візуального шуму.</div>
+        <div class="rule-item"><strong>Правильна візуалізація.</strong><br>Доречний тип діаграми, правильний масштаб і зрозумілі позначення.</div>
+        <div class="rule-item"><strong>Достовірність.</strong><br>Точні дані, одиниці вимірювання та вказане джерело.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Інтерактив: розсортуйте елементи</h2>
+      <p class="lead">Перетягніть картки або натисніть картку, а потім потрібну зону. Розподіліть елементи на “Варто використати” та “Краще уникати”.</p>
+      <div class="chips" id="chipSource">
+        <span class="chip" draggable="true" data-kind="use">короткий заголовок</span>
+        <span class="chip" draggable="true" data-kind="avoid">7 різних шрифтів</span>
+        <span class="chip" draggable="true" data-kind="use">джерело даних</span>
+        <span class="chip" draggable="true" data-kind="avoid">дрібний текст</span>
+        <span class="chip" draggable="true" data-kind="use">єдина палітра кольорів</span>
+        <span class="chip" draggable="true" data-kind="avoid">неперевірені числа</span>
+      </div>
+      <div class="sort-zone" style="margin-top:14px;">
+        <div class="bucket" data-bucket="use">
+          <h3>Варто використати</h3>
+          <div class="chips"></div>
+        </div>
+        <div class="bucket" data-bucket="avoid">
+          <h3>Краще уникати</h3>
+          <div class="chips"></div>
+        </div>
+      </div>
+      <button class="btn" type="button" onclick="checkSorting()">Перевірити сортування</button>
+      <button class="btn secondary" type="button" onclick="resetSorting()">Скинути</button>
+      <span id="sortStatus" class="status">Очікує виконання</span>
+    </section>
+
+    <section id="prepare">
+      <h2>IV. Підготовка до практичної роботи — 4 хв</h2>
+      <p class="lead">Перед роботою в Canva перевірте безпеку, оберіть логіку макета та сплануйте, які дані покажете у візуальній формі.</p>
+      <div class="grid two">
+        <article class="task-card">
+          <h3>Інструктаж і безпечна робота</h3>
+          <div id="safetyChecklist">
+            <label class="check-row"><input type="checkbox"> Працюю лише з потрібними вкладками та не переходжу за випадковими посиланнями.</label>
+            <label class="check-row"><input type="checkbox"> Не публікую персональні дані без дозволу.</label>
+            <label class="check-row"><input type="checkbox"> Використовую зображення та елементи Canva з дотриманням ліцензій.</label>
+            <label class="check-row"><input type="checkbox"> Роблю перерву для очей і тримаю правильну поставу.</label>
+          </div>
+          <div id="safetyStatus" class="status">ТБ: 0/4</div>
+        </article>
+        <article class="task-card">
+          <h3>План дій у Canva</h3>
+          <div id="canvaPlan">
+            <label class="check-row"><input type="checkbox"> Обрати формат “Інфографіка вертикальна”.</label>
+            <label class="check-row"><input type="checkbox"> Додати заголовок і короткий підзаголовок.</label>
+            <label class="check-row"><input type="checkbox"> Побудувати діаграму або схему на основі даних.</label>
+            <label class="check-row"><input type="checkbox"> Додати 3-5 фактів, піктограми та джерело даних.</label>
+          </div>
+          <div id="planStatus" class="status">План: 0/4</div>
+        </article>
+      </div>
+      <article class="task-card" style="margin-top:16px;">
+        <h3>Критерії оцінювання практичної роботи</h3>
+        <p>Перегляньте критерії перед початком роботи, щоб одразу розуміти, яким має бути готовий результат.</p>
+        <div id="qualityChecklist">
+          <label class="check-row"><input type="checkbox" data-points="2"> Є чітка тема, заголовок і цільова аудиторія. <strong>2 б.</strong></label>
+          <label class="check-row"><input type="checkbox" data-points="2"> Дані зрозумілі, перевірені, є джерело. <strong>2 б.</strong></label>
+          <label class="check-row"><input type="checkbox" data-points="3"> Візуалізація доречна: діаграма, схема або піктограми. <strong>3 б.</strong></label>
+          <label class="check-row"><input type="checkbox" data-points="2"> Композиція охайна, текст легко читати. <strong>2 б.</strong></label>
+          <label class="check-row"><input type="checkbox" data-points="2"> Кольори й шрифти узгоджені, немає перевантаження. <strong>2 б.</strong></label>
+          <label class="check-row"><input type="checkbox" data-points="1"> Роботу експортовано або надано посилання. <strong>1 б.</strong></label>
+        </div>
+        <div class="progress-wrap"><div id="scoreBar" class="progress-bar"></div></div>
+        <div id="qualityStatus" class="status">Самоперевірка: 0/12</div>
+      </article>
+    </section>
+
+    <section id="practice">
+      <h2>V. Практична робота №1 — 18 хв</h2>
+      <p class="lead">Тема роботи: “Мій цифровий день: куди зникає час?”. Заповніть конструктор, отримайте технічне завдання і виконайте вертикальну інфографіку в Canva.</p>
+      <div class="constructor">
+        <div class="task-card">
+          <h3>Конструктор завдання</h3>
+          <div class="field-group">
+            <label><strong>Ім'я учня/учениці</strong><input id="studentName" type="text" placeholder="Наприклад: Олена"></label>
+            <label><strong>Тема інфографіки</strong>
+              <select id="topic">
+                <option>Мій цифровий день: куди зникає час?</option>
+                <option>Як зменшити цифрове перевантаження</option>
+                <option>Безпечний пароль за 5 кроків</option>
+                <option>Сон, навчання і відпочинок учня 10 класу</option>
+                <option>Екозвички школяра: менше пластику щодня</option>
+                <option>Власна тема</option>
+              </select>
+            </label>
+            <label><strong>Аудиторія</strong>
+              <select id="audience">
+                <option>учні 8-10 класів</option>
+                <option>батьки</option>
+                <option>учителі</option>
+                <option>шкільна спільнота</option>
+              </select>
+            </label>
+            <label><strong>Формат Canva</strong>
+              <select id="format">
+                <option>Інфографіка вертикальна</option>
+                <option>Презентаційний слайд 16:9</option>
+                <option>Постер A4</option>
+                <option>Публікація для соцмережі</option>
+              </select>
+            </label>
+            <label><strong>3 найважливіші вимоги клієнта</strong><textarea id="requirements" placeholder="Наприклад: показати структуру цифрового часу; додати рекомендацію; вказати джерело"></textarea></label>
+            <label><strong>Варіанти даних для візуалізації</strong><textarea id="dataOptions" placeholder="35%, 25%, 20%, 15%, 5%; або час 2:06, 1:30, 1:12, 0:54, 0:18"></textarea></label>
+            <label><strong>Варіанти візуального оформлення</strong><textarea id="visualOptions" placeholder="Кругова або кільцева діаграма + піктограми смартфона, книги, відео, контролера, годинника"></textarea></label>
+          </div>
+          <button class="btn" type="button" onclick="generateBrief()">Сформувати ТЗ</button>
+        </div>
+
+        <div class="task-card">
+          <h3>Технічне завдання для роботи</h3>
+          <div id="brief" class="brief">Заповніть поля ліворуч і натисніть “Сформувати ТЗ”.</div>
+          <button class="btn secondary" type="button" onclick="copyBrief()">Скопіювати ТЗ</button>
+          <span id="copyStatus" class="status">Готово до копіювання</span>
+        </div>
+      </div>
+
+      <div class="task-card" style="margin-top:16px;">
+        <h3>Завдання практичної роботи</h3>
+        <p>Створіть у Canva вертикальну інфографіку для шкільної кампанії <strong>“Цифровий баланс”</strong> на тему <strong>“Мій цифровий день: куди зникає час?”</strong>.</p>
+        <table class="data-table">
+          <thead>
+            <tr><th>Категорія</th><th>Частка</th><th>Час із 6 год</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Соціальні мережі</td><td>35%</td><td>2 год 06 хв</td></tr>
+            <tr><td>Навчання</td><td>25%</td><td>1 год 30 хв</td></tr>
+            <tr><td>Відео</td><td>20%</td><td>1 год 12 хв</td></tr>
+            <tr><td>Ігри</td><td>15%</td><td>54 хв</td></tr>
+            <tr><td>Інше</td><td>5%</td><td>18 хв</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Разом:</strong> 6 год цифрового часу. Джерело даних: “Навчальні дані”.</p>
+      </div>
+
+      <div class="grid two" style="margin-top:16px;">
+        <article class="task-card">
+          <h3>Обов'язкові елементи інфографіки</h3>
+          <ul>
+            <li>заголовок і короткий підзаголовок;</li>
+            <li>діаграма: кругова або кільцева;</li>
+            <li>5 показників: 35%, 25%, 20%, 15%, 5%;</li>
+            <li>не менше 4 піктограм: смартфон, книга, відео, контролер, годинник;</li>
+            <li>короткий висновок про цифровий час;</li>
+            <li>одна рекомендація щодо цифрового балансу;</li>
+            <li>джерело: “Навчальні дані”.</li>
+          </ul>
+        </article>
+        <article class="task-card">
+          <h3>Кроки виконання в Canva</h3>
+          <ol>
+            <li>Відкрийте Canva і виберіть формат “Інфографіка”.</li>
+            <li>Оберіть вертикальний шаблон або чистий макет.</li>
+            <li>Додайте назву “Мій цифровий день”.</li>
+            <li>Поділіть макет на 3 частини: дані, висновок, рекомендація.</li>
+            <li>Використайте не більше 2 шрифтів.</li>
+            <li>У Charts/Apps створіть кругову або кільцеву діаграму з числами 35, 25, 20, 15, 5.</li>
+            <li>В Elements додайте піктограми для кожної категорії.</li>
+            <li>Перевірте роботу за критеріями та завантажте або надайте посилання.</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <h2>VI. Презентація й оцінювання — 5 хв</h2>
+      <p class="lead">“Галерея дизайнерів”: перегляньте роботи однокласників, дайте короткий зворотний зв'язок і виконайте мінітест для закріплення.</p>
+      <div class="grid two">
+        <article class="task-card">
+          <h3>Дві зірки й одне побажання</h3>
+          <label><strong>Зірка 1: що вдалося найкраще?</strong><textarea id="starOne" placeholder="Наприклад: чіткий заголовок, вдала діаграма..."></textarea></label>
+          <label><strong>Зірка 2: що ще сильне в роботі?</strong><textarea id="starTwo" placeholder="Наприклад: охайна композиція, гарні кольори..."></textarea></label>
+          <label><strong>Побажання: що можна покращити?</strong><textarea id="wish" placeholder="Наприклад: додати джерело, збільшити шрифт..."></textarea></label>
+          <button class="btn" type="button" onclick="generateFeedback()">Сформувати відгук</button>
+          <span id="feedbackStatus" class="status">Відгук ще не сформовано</span>
+        </article>
+        <article class="task-card">
+          <h3>Готовий відгук</h3>
+          <div id="feedbackText" class="brief">Заповніть поля ліворуч, щоб отримати короткий доброзичливий відгук.</div>
+          <button class="btn secondary" type="button" onclick="copyFeedback()">Скопіювати відгук</button>
+        </article>
+      </div>
+
+      <h3 style="margin-top:20px;">Мінітест після галереї</h3>
+      <p class="lead">Після перевірки сторінка покаже результат і підказки.</p>
+      <div class="quiz" id="quizBox">
+        <div class="question" data-answer="b">
+          <p>1. Що є головним призначенням інфографіки?</p>
+          <label class="option-row"><input type="radio" name="q1" value="a"> Збільшити кількість тексту на сторінці</label>
+          <label class="option-row"><input type="radio" name="q1" value="b"> Подати складну інформацію зрозуміло й візуально</label>
+          <label class="option-row"><input type="radio" name="q1" value="c"> Замінити всі пояснення випадковими картинками</label>
+        </div>
+        <div class="question" data-answer="a">
+          <p>2. Для порівняння кількості за кількома категоріями найчастіше використовують...</p>
+          <label class="option-row"><input type="radio" name="q2" value="a"> стовпчикову діаграму</label>
+          <label class="option-row"><input type="radio" name="q2" value="b"> абзац із 15 речень</label>
+          <label class="option-row"><input type="radio" name="q2" value="c"> випадковий фон</label>
+        </div>
+        <div class="question" data-answer="c">
+          <p>3. Що обов'язково потрібно додати, якщо використано статистику?</p>
+          <label class="option-row"><input type="radio" name="q3" value="a"> Більше декоративних елементів</label>
+          <label class="option-row"><input type="radio" name="q3" value="b"> Тільки яскравий фон</label>
+          <label class="option-row"><input type="radio" name="q3" value="c"> Джерело даних</label>
+        </div>
+        <div class="question" data-answer="b">
+          <p>4. Візуальна ієрархія допомагає...</p>
+          <label class="option-row"><input type="radio" name="q4" value="a"> зробити всі елементи однаково непомітними</label>
+          <label class="option-row"><input type="radio" name="q4" value="b"> показати, що читати першим, другим і третім</label>
+          <label class="option-row"><input type="radio" name="q4" value="c"> прибрати заголовок</label>
+        </div>
+        <div class="question" data-answer="a">
+          <p>5. Яка дія в Canva є найкращою перед початком дизайну?</p>
+          <label class="option-row"><input type="radio" name="q5" value="a"> Визначити тему, аудиторію і головну ідею</label>
+          <label class="option-row"><input type="radio" name="q5" value="b"> Додати всі доступні шрифти</label>
+          <label class="option-row"><input type="radio" name="q5" value="c"> Обрати фон навмання</label>
+        </div>
+      </div>
+      <button class="btn" type="button" onclick="checkQuiz()">Перевірити тест</button>
+      <span id="quizStatus" class="status">Результат ще не визначено</span>
+    </section>
+
+    <section id="reflection">
+      <h2>VII. Рефлексія — 2 хв</h2>
+      <p class="lead">Метод “3–2–1”: заповніть коротку рефлексію. Після цього можна сформувати підсумок роботи для вчителя.</p>
+      <div class="reflection-grid">
+        <label><strong>3 речі, які я зрозумів/зрозуміла</strong><textarea id="r3" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea></label>
+        <label><strong>2 дії, які виконав/виконала в Canva</strong><textarea id="r2" placeholder="1. ...&#10;2. ..."></textarea></label>
+        <label><strong>1 питання, яке залишилося</strong><textarea id="r1" placeholder="Моє питання..."></textarea></label>
+      </div>
+      <div style="margin-top:14px;">
+        <label><strong>Самооцінювання</strong>
+          <select id="selfLevel">
+            <option>Початковий рівень: потребую допомоги</option>
+            <option>Середній рівень: виконую за зразком</option>
+            <option>Достатній рівень: виконую самостійно з незначними підказками</option>
+            <option>Високий рівень: можу пояснити іншому</option>
+          </select>
+        </label>
+      </div>
+      <button class="btn" type="button" onclick="generateSummary()">Сформувати підсумок</button>
+      <button class="btn secondary" type="button" onclick="copySummary()">Скопіювати підсумок</button>
+      <span id="summaryStatus" class="status">Підсумок ще не сформовано</span>
+      <div id="summary" class="result-panel hidden"></div>
+      <p class="print-note">Порада: якщо сторінка розміщена на GitHub Pages, результати не надсилаються автоматично. Учень може скопіювати підсумок, вставити його у форму, електронний щоденник або надіслати вчителю.</p>
+    </section>
+
+    <section id="homework">
+      <h2>VIII. Домашнє завдання</h2>
+      <p class="lead">Оберіть один із двох варіантів домашньої роботи.</p>
+      <div class="grid two">
+        <article class="task-card">
+          <h3>Варіант 1. “Інфографіка навколо нас”</h3>
+          <p>Знайдіть в інтернеті приклад інфографіки. Проаналізуйте її за трьома критеріями: інформативність, достовірність, дизайн. Додайте посилання на джерело.</p>
+        </article>
+        <article class="task-card">
+          <h3>Варіант 2. “Мій цифровий баланс”</h3>
+          <p>Удоскональте створену інфографіку, додавши три рекомендації щодо раціонального використання цифрових пристроїв.</p>
+        </article>
+      </div>
+      <label class="check-row"><input id="homeworkCheck" type="checkbox"> Я обрав/обрала варіант домашнього завдання й розумію, що потрібно виконати.</label>
+    </section>
+  </main>
+
+  <script>
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+    function setStatus(element, text, type = "") {
+      element.textContent = text;
+      element.className = "status" + (type ? " " + type : "");
+    }
+
+    function updateChecklistStatus(containerId, statusId, label) {
+      const boxes = $$(`#${containerId} input[type="checkbox"]`);
+      const checked = boxes.filter(box => box.checked).length;
+      setStatus($(`#${statusId}`), `${label}: ${checked}/${boxes.length}`, checked === boxes.length ? "ok" : "");
+    }
+
+    ["safetyChecklist", "canvaPlan"].forEach(id => {
+      $$("#" + id + " input").forEach(input => input.addEventListener("change", () => {
+        if (id === "safetyChecklist") updateChecklistStatus("safetyChecklist", "safetyStatus", "ТБ");
+        if (id === "canvaPlan") updateChecklistStatus("canvaPlan", "planStatus", "План");
+      }));
+    });
+
+    function checkChallengeAnswers() {
+      const answers = ["challengeQ1", "challengeQ2", "challengeQ3", "challengeQ4"].map(id => $("#" + id).value.trim());
+      const filled = answers.filter(Boolean).length;
+      setStatus($("#challengeStatus"), `Заповнено відповідей: ${filled}/4`, filled === 4 ? "ok" : "bad");
+    }
+
+    function checkMatches() {
+      const selects = $$("#matchTerms select");
+      const correct = selects.filter(select => select.value === select.dataset.answer).length;
+      setStatus($("#matchStatus"), `Правильно: ${correct}/${selects.length}`, correct === selects.length ? "ok" : "bad");
+    }
+
+    function checkMotivation() {
+      const boxes = $$("#motivationChoices input");
+      const correct = boxes.filter(box => (box.checked && box.dataset.good === "true") || (!box.checked && box.dataset.good === "false")).length;
+      const goodSelected = boxes.filter(box => box.checked && box.dataset.good === "true").length;
+      setStatus($("#motivationStatus"), `Точність вибору: ${correct}/${boxes.length}. Корисних ситуацій обрано: ${goodSelected}`, correct === boxes.length ? "ok" : "bad");
+    }
+
+    let selectedChip = null;
+
+    function setupSorting() {
+      $$(".chip").forEach(chip => {
+        chip.addEventListener("dragstart", event => {
+          event.dataTransfer.setData("text/plain", chip.textContent);
+          chip.classList.add("selected");
+        });
+        chip.addEventListener("dragend", () => chip.classList.remove("selected"));
+        chip.addEventListener("click", () => {
+          if (selectedChip) selectedChip.classList.remove("selected");
+          selectedChip = chip;
+          chip.classList.add("selected");
+        });
+      });
+
+      $$(".bucket").forEach(bucket => {
+        bucket.addEventListener("dragover", event => event.preventDefault());
+        bucket.addEventListener("drop", event => {
+          event.preventDefault();
+          const text = event.dataTransfer.getData("text/plain");
+          const chip = $$(".chip").find(item => item.textContent === text);
+          if (chip) bucket.querySelector(".chips").appendChild(chip);
+        });
+        bucket.addEventListener("click", () => {
+          if (selectedChip) {
+            bucket.querySelector(".chips").appendChild(selectedChip);
+            selectedChip.classList.remove("selected");
+            selectedChip = null;
+          }
+        });
+      });
+    }
+
+    function checkSorting() {
+      const chips = $$(".bucket .chip");
+      if (chips.length < 6) {
+        setStatus($("#sortStatus"), "Розподіліть усі 6 карток", "bad");
+        return;
+      }
+      const correct = chips.filter(chip => chip.closest(".bucket").dataset.bucket === chip.dataset.kind).length;
+      setStatus($("#sortStatus"), `Правильно розміщено: ${correct}/6`, correct === 6 ? "ok" : "bad");
+    }
+
+    function resetSorting() {
+      const source = $("#chipSource");
+      $$(".bucket .chip").forEach(chip => source.appendChild(chip));
+      setStatus($("#sortStatus"), "Очікує виконання");
+    }
+
+    function generateBrief() {
+      const name = $("#studentName").value.trim() || "учень/учениця";
+      const brief = [
+        `Практична робота №1. Інфографіка в Canva`,
+        ``,
+        `Виконавець/виконавиця: ${name}`,
+        `Тема: ${$("#topic").value}`,
+        `Цільова аудиторія: ${$("#audience").value}`,
+        `Формат у Canva: ${$("#format").value}`,
+        ``,
+        `Мета: створити вертикальну інфографіку для шкільної кампанії “Цифровий баланс”, яка показує, куди зникає цифровий час учня.`,
+        ``,
+        `3 найважливіші вимоги клієнта:`,
+        `${$("#requirements").value.trim() || "1. Показати структуру цифрового часу. 2. Додати висновок і рекомендацію. 3. Обов'язково вказати джерело “Навчальні дані”."}`,
+        ``,
+        `Варіанти даних для візуалізації:`,
+        `${$("#dataOptions").value.trim() || "Соціальні мережі - 35% (2 год 06 хв); навчання - 25% (1 год 30 хв); відео - 20% (1 год 12 хв); ігри - 15% (54 хв); інше - 5% (18 хв). Разом - 6 год."}`,
+        ``,
+        `Варіанти візуального оформлення:`,
+        `${$("#visualOptions").value.trim() || "Кругова або стовпчикова діаграма, 3-5 піктограм, короткі підписи, єдина палітра з 2-3 кольорів."}`,
+        ``,
+        `Обов'язкові елементи: заголовок, підзаголовок, діаграма, 5 показників, 4+ піктограми, висновок, рекомендація, джерело “Навчальні дані”.`,
+        `Після завершення: перевірити роботу за критеріями та завантажити файл або надати посилання.`
+      ].join("\n");
+      $("#brief").textContent = brief;
+    }
+
+    async function copyText(text, statusElement, successText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus(statusElement, successText, "ok");
+      } catch (error) {
+        setStatus(statusElement, "Скопіюйте вручну: браузер заблокував копіювання", "bad");
+      }
+    }
+
+    function copyBrief() {
+      copyText($("#brief").textContent, $("#copyStatus"), "Скопійовано");
+    }
+
+    function updateQuality() {
+      const boxes = $$("#qualityChecklist input");
+      const points = boxes.reduce((sum, box) => sum + (box.checked ? Number(box.dataset.points) : 0), 0);
+      $("#scoreBar").style.width = `${Math.round(points / 12 * 100)}%`;
+      setStatus($("#qualityStatus"), `Самоперевірка: ${points}/12`, points >= 10 ? "ok" : "");
+    }
+
+    $$("#qualityChecklist input").forEach(input => input.addEventListener("change", updateQuality));
+
+    function generateFeedback() {
+      const text = [
+        `Дві зірки й одне побажання`,
+        ``,
+        `Зірка 1: ${$("#starOne").value.trim() || "у роботі є вдала ідея"}.`,
+        `Зірка 2: ${$("#starTwo").value.trim() || "інфографіка має зрозумілі візуальні елементи"}.`,
+        `Побажання: ${$("#wish").value.trim() || "варто ще перевірити джерело даних і читабельність тексту"}.`
+      ].join("\n");
+      $("#feedbackText").textContent = text;
+      setStatus($("#feedbackStatus"), "Відгук сформовано", "ok");
+    }
+
+    function copyFeedback() {
+      copyText($("#feedbackText").textContent, $("#feedbackStatus"), "Відгук скопійовано");
+    }
+
+    function checkQuiz() {
+      const questions = $$("#quizBox .question");
+      let correct = 0;
+      questions.forEach((question, index) => {
+        const picked = $(`input[name="q${index + 1}"]:checked`, question);
+        const isCorrect = picked && picked.value === question.dataset.answer;
+        if (isCorrect) correct++;
+        question.style.borderColor = isCorrect ? "#26a269" : "#ff9a8a";
+        question.style.background = isCorrect ? "#f3fff7" : "#fff7f5";
+      });
+      setStatus($("#quizStatus"), `Ваш результат: ${correct}/${questions.length}`, correct >= 4 ? "ok" : "bad");
+    }
+
+    function generateSummary() {
+      const name = $("#studentName").value.trim() || "Учень/учениця";
+      const quiz = $("#quizStatus").textContent;
+      const quality = $("#qualityStatus").textContent;
+      const summary = [
+        `<strong>Підсумок роботи</strong>`,
+        `<br><strong>Ім'я:</strong> ${escapeHtml(name)}`,
+        `<br><strong>Тема:</strong> ${escapeHtml($("#topic").value)}`,
+        `<br><strong>Тест:</strong> ${escapeHtml(quiz)}`,
+        `<br><strong>Самоперевірка практичної:</strong> ${escapeHtml(quality)}`,
+        `<br><strong>Взаємооцінювання:</strong><br>${escapeHtml($("#feedbackText").innerText || "Не заповнено").replace(/\n/g, "<br>")}`,
+        `<br><strong>Самооцінювання:</strong> ${escapeHtml($("#selfLevel").value)}`,
+        `<br><strong>3 речі, які зрозумів/зрозуміла:</strong><br>${escapeHtml($("#r3").value || "Не заповнено").replace(/\n/g, "<br>")}`,
+        `<br><strong>2 дії в Canva:</strong><br>${escapeHtml($("#r2").value || "Не заповнено").replace(/\n/g, "<br>")}`,
+        `<br><strong>1 питання:</strong><br>${escapeHtml($("#r1").value || "Не заповнено").replace(/\n/g, "<br>")}`
+      ].join("");
+      $("#summary").innerHTML = summary;
+      $("#summary").classList.remove("hidden");
+      setStatus($("#summaryStatus"), "Підсумок сформовано", "ok");
+    }
+
+    function copySummary() {
+      if ($("#summary").classList.contains("hidden")) generateSummary();
+      copyText($("#summary").innerText, $("#summaryStatus"), "Підсумок скопійовано");
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    setupSorting();
+    updateChecklistStatus("safetyChecklist", "safetyStatus", "ТБ");
+    updateChecklistStatus("canvaPlan", "planStatus", "План");
+    updateQuality();
+  </script>
+</body>
+</html>
